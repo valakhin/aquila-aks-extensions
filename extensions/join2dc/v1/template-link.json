@@ -17,7 +17,7 @@
 		},
 		"parameters": {
 			"artifactsLocation": {
-				"value": ""
+				"value": "https://github.com/valakhin/aquila-aks-extensions/blob/master/join2dc/v1/Add-Server2Domain.ps1"
 			},
 			"apiVersionDeployments": {
 				"value": "[variables('apiVersionDeployments')]"
@@ -29,7 +29,7 @@
             	"value": "EXTENSION_TARGET_VM_TYPE"
             },
 			"extensionParameters": {
-				"value": "Aquila.net 10.20.0.66 aquila\sqladmin password@321"
+				"value": "Aquila.net 10.20.0.66 sqladmin password@321"
 			},
 			"vmIndex":{
 				"value": "[copyIndex(EXTENSION_LOOP_OFFSET)]"
