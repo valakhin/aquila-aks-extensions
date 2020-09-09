@@ -67,13 +67,13 @@ function InstallDocker() {
 }
 
 # Set NIC to look at DC for DNS
-Do { $DNSResult = ChangeDNS } while ( $DNSResult -eq $false )
+$DNSResult = ChangeDNS 
 
 # Join the domain
-Do { $JDResult = JoinDomain } while ( $JDResult -eq $false )
+$JDResult = JoinDomain 
 
 # Install docker
-Do { $IDResult = InstallDocker } while ( $IDResult -eq $false )
+$IDResult = InstallDocker 
 
 # Reboot to finish the join
 Restart-Computer -Force
