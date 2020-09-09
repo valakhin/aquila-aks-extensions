@@ -27,7 +27,7 @@ function ChangeDNS() {
             return $false
         }
         Write-Host "Changing DNS to $DCIP"
-        $Adapter = Get-NetAdapter | Where-Object {$_.Name -like "Ethernet"}
+        $Adapter = Get-NetAdapter | Where-Object {$_.Name -like "vEthernet (Ethernet*"}
         Set-DnsClientServerAddress -InterfaceIndex ($Adapter).ifIndex -ServerAddresses $DCIP
         return $true
     } catch {
@@ -43,6 +43,7 @@ function JoinDomain() {
     })
     Try {
         Add-Computer -Domain $DomainName -Credential $joinCred
+		Start-Sleep 10
         return $true
     } catch {
 	    Write-Warning Error[0]
@@ -57,7 +58,7 @@ function InstallDocker() {
 	Write-Host "Installing docker..."
 	try {
 		Install-Module -Name DockerMsftProvider -Repository PSGallery -Force
-		Install-Package -Name docker -ProviderName DockerMsftProvider
+		Install-Package -Name docker -ProviderName DockerMsftProvider -Confirm:$False
 		return $true
 	} catch {
 	    Write-Warning Error[0]
@@ -73,7 +74,7 @@ $DNSResult = ChangeDNS
 $JDResult = JoinDomain 
 
 # Install docker
-$IDResult = InstallDocker 
+#$IDResult = InstallDocker 
 
 # Reboot to finish the join
 Restart-Computer -Force
