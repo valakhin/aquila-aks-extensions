@@ -105,7 +105,7 @@ function InstallgMSACRD() {
 	try {
 	    Write-Output "Installing GMSA CRD..."
 		$crdName = "gmsacredentialspecs.windows.k8s.io"
-		$ret = C:\k\kubectl.exe --kubeconfig C:\k\config get CustomResourceDefinition $crdName
+		#$ret = C:\k\kubectl.exe --kubeconfig C:\k\config get CustomResourceDefinition $crdName
 		
 		# Generate GMSA CRD spec to install on Kubernetes cluster
 		$CrdManifestFile = "C:\k\gmsa-crd.yml"
