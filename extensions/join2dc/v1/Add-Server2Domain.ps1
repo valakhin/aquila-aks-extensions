@@ -13,6 +13,12 @@ param(
     [Parameter(Mandatory=$true)]
     [string]$DomainPassword,
 	
+	[Parameter(Mandatory=$true)]
+    [string]$MgName,
+
+    [Parameter(Mandatory=$true)]
+    [string]$SqlInstance,
+	
 	[Parameter(Mandatory = $true)]
 	[String]
 	$AccountName,
@@ -259,6 +265,12 @@ function GenerateAndApplyCredentialSpec($Domain, $AccountName, $AdditionalAccoun
 	}
 }
 
+function BuildManagementServerContainer($Domain, $AccountName, $MgName, $SqlInstance) {
+
+./Build-Container4MS $Domain $AccountName $MgName $SqlInstance
+
+}
+
 # Set NIC to look at DC for DNS
 $DNSResult = ChangeDNS 
 
@@ -279,6 +291,8 @@ if( !$ret ) {
 Write-Output "Failed Generate Credential file"
 return
 }
+
+BuildManagementServerContainer $DomainName, $AccountName, $MgName, $SqlInstance 
 
 # Reboot to finish the join
 Restart-Computer -Force

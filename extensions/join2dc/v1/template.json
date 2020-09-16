@@ -65,7 +65,7 @@
                     ]
                 },
                 "protectedSettings": {
-                "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted ./Add-Server2Domain.ps1', ' ', 'Aquila.net 10.20.0.66 aquila\\sqladmin password@321 AquilaGMSA' )]"
+                "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted ./Add-Server2Domain.ps1', ' ', 'Aquila.net 10.20.0.66 aquila\\sqladmin password@321 MyInst 10.20.0.68 AquilaGMSA' )]"
                 }
             }
         }
