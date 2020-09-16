@@ -12,13 +12,16 @@ param(
     [Parameter(Mandatory=$true)]
     [string]$sqlInstance
 )
+$passwd="CtqiR2lJ8IIh60ggDmOKw2K0Rwc+Hr6n" 
 
 #Login to Aquila ACR
 #ignore login warning 
 try {
-	docker login -u aquila -p CtqiR2lJ8IIh60ggDmOKw2K0Rwc+Hr6n aquila.azurecr.io
+	#docker login -u aquila -p CtqiR2lJ8IIh60ggDmOKw2K0Rwc+Hr6n aquila.azurecr.io
+	echo $passwd | docker login -u aquila --password-stdin aquila.azurecr.io
+	Write-Output "Container registry login Success"
 } catch {
-	Write-Output "Container registry login"
+	Write-Output "Container registry login Failed"
 }
 
 
