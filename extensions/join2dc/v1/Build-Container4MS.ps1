@@ -1,11 +1,10 @@
-
+[CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
     [string]$DomainName,
 	
 	[Parameter(Mandatory = $true)]
-	[String]
-	$AccountName,
+	[String]$AccountName,
 	
 	[Parameter(Mandatory=$true)]
     [string]$mgName,
