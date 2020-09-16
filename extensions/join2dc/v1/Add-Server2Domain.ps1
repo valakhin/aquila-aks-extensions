@@ -300,7 +300,7 @@ Write-Output "Failed Generate Credential file"
 return
 }
 
-BuildManagementServerContainer $DomainName, $AccountName, $MgName, $SqlInstance 
+BuildManagementServerContainer $DomainName $AccountName $MgName $SqlInstance 
 
 # Reboot to finish the join
 Restart-Computer -Force

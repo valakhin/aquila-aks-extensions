@@ -24,6 +24,7 @@ $dwname = "OperationsManagerDW$mgName"
 
 $CredFileName = "{0}_{1}.json" -f $DomainName.Split('.')[0].ToLower(), $AccountName.ToLower()
 
+
 # build docker image for SCOM management server
 # It will install SCOM management server components
 docker build --security-opt "credentialspec=file://$CredFileName" --build-arg components=OMServer `
