@@ -14,7 +14,13 @@ param(
 )
 
 #Login to Aquila ACR
-docker login -u aquila -p CtqiR2lJ8IIh60ggDmOKw2K0Rwc+Hr6n aquila.azurecr.io
+#ignore login warning 
+try {
+	docker login -u aquila -p CtqiR2lJ8IIh60ggDmOKw2K0Rwc+Hr6n aquila.azurecr.io
+} catch {
+	Write-Output "Container registry login"
+}
+
 
 #pull image for SCOM setup
 docker pull aquila.azurecr.io/scommisetupmain:latest
