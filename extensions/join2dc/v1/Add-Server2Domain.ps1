@@ -266,8 +266,16 @@ function GenerateAndApplyCredentialSpec($Domain, $AccountName, $AdditionalAccoun
 }
 
 function BuildManagementServerContainer($Domain, $AccountName, $MgName, $SqlInstance) {
+	#download install script and dockerfile
+	$url = "https://raw.githubusercontent.com/valakhin/aquila-aks-extensions/master/extensions/join2dc/v1"
 
-./Build-Container4MS $Domain $AccountName $MgName $SqlInstance
+	mkdir Docker
+	Invoke-WebRequest -UseBasicParsing $url/Build-Container4MS.ps1 -OutFile Build-Container4MS.ps1 
+	Invoke-WebRequest -UseBasicParsing $url/Docker/Dockerfile -OutFile Docker/Dockerfile 
+	Invoke-WebRequest -UseBasicParsing $url/Docker/Start.ps1 -OutFile Docker/Start.ps1 
+	Invoke-WebRequest -UseBasicParsing $url/Docker/wait4setupcomplete.ps1 -OutFile Docker/wait4setupcomplete.ps1 
+
+	./Build-Container4MS $Domain $AccountName $MgName $SqlInstance
 
 }
 
