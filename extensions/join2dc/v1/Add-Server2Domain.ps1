@@ -106,49 +106,8 @@ function InstallGMSAAccount($gMSAAcct)
         }
     }
 	
-function InstallgMSACRD() {
-    # Verify it is already installed or not
-	try {
-	    Write-Output "Installing GMSA CRD..."
-		$crdName = "gmsacredentialspecs.windows.k8s.io"
-		#$ret = C:\k\kubectl.exe --kubeconfig C:\k\config get CustomResourceDefinition $crdName
-		
-		# Generate GMSA CRD spec to install on Kubernetes cluster
-		$CrdManifestFile = "C:\k\gmsa-crd.yml"
-		$resource = [ordered]@{
-			"apiVersion" = "apiextensions.k8s.io/v1beta1";
-			"kind" = "CustomResourceDefinition";
-			"metadata" = @{
-				"name" = $crdName
-			};
-			"spec" = @{
-				"group" = "windows.k8s.io";
-				"version" = "v1alpha1";
-				"names" = @{
-					"kind" = "GMSACredentialSpec";
-					"plural" = "gmsacredentialspecs"
-					};
-				"scope" = "Cluster";
-				"validation" = @{
-				   "openAPIV3Schema" = @{
-					  "properties" = @{
-						  "credspec" = @{
-							"description" = "GMSA Credential Spec";
-							"type" = "object"
-							}
-						}
-					  }
-					}
-			}
-		}
-		ConvertTo-Yaml $resource | Set-Content $CrdManifestFile
-		C:\k\kubectl.exe --kubeconfig C:\k\config apply -f $CrdManifestFile
-	} catch {
-		Write-Error "The Failed to generate and aplly CRD "
-		return $false
-	}
-}
-function GenerateAndApplyCredentialSpec($Domain, $AccountName, $AdditionalAccounts) {
+function InstallGMSAAccounts($Domain, $AccountName, $AdditionalAccounts) 
+   {
     try {
 		# Validate domain information
 		$ADDomain = Get-ADDomain -Server $Domain -ErrorAction Continue
@@ -190,19 +149,6 @@ function GenerateAndApplyCredentialSpec($Domain, $AccountName, $AdditionalAccoun
 			}
 		}
 
-		#File path to store gMSA credential specification
-		$CredSpecRoot = "C:\ProgramData\docker\credentialspecs"
-		$FileName = "{0}_{1}" -f $ADDomain.NetBIOSName.ToLower(), $AccountName.ToLower()
-		$FullPath = Join-Path $CredSpecRoot "$($FileName.TrimEnd(".json")).json"
-	   
-		# Start hash table for output
-		$output = @{}
-
-		# Create ActiveDirectoryConfig Object
-		$output.ActiveDirectoryConfig = @{}
-		$output.ActiveDirectoryConfig.GroupManagedServiceAccounts = @( @{"Name" = $AccountName; "Scope" = $ADDomain.DNSRoot } )
-		$output.ActiveDirectoryConfig.GroupManagedServiceAccounts += @{"Name" = $AccountName; "Scope" = $ADDomain.NetBIOSName }
-		
 		#install gMSA account
 		Write-Output "Installing $AccountName on host..."
 		$ret = InstallGMSAAccount($AccountName)
@@ -212,7 +158,6 @@ function GenerateAndApplyCredentialSpec($Domain, $AccountName, $AdditionalAccoun
 		}
 		if ($AdditionalAccounts) {
 			$AdditionalAccounts | ForEach-Object {
-				$output.ActiveDirectoryConfig.GroupManagedServiceAccounts += @{"Name" = $_.AccountName; "Scope" = $_.Domain }
 				#install additional gMSA account
 				Write-Output "Installing additional gMSA $AccountName on host..."
 				$ret = InstallGMSAAccount($_.AccountName)
@@ -222,61 +167,10 @@ function GenerateAndApplyCredentialSpec($Domain, $AccountName, $AdditionalAccoun
 				}
 			}
 		}
-		
-		#create gmsa CRD on cluster
-		$ret = InstallgMSACRD
-		Start-Sleep 10
-		
-		# Create CmsPlugins Object
-		$output.CmsPlugins = @("ActiveDirectory")
-
-		# Create DomainJoinConfig Object
-		$output.DomainJoinConfig = @{}
-		$output.DomainJoinConfig.DnsName = $ADDomain.DNSRoot
-		$output.DomainJoinConfig.Guid = $ADDomain.ObjectGUID
-		$output.DomainJoinConfig.DnsTreeName = $ADDomain.Forest
-		$output.DomainJoinConfig.NetBiosName = $ADDomain.NetBIOSName
-		$output.DomainJoinConfig.Sid = $ADDomain.DomainSID.Value
-		$output.DomainJoinConfig.MachineAccountName = $AccountName
-
-		$output | ConvertTo-Json -Depth 5 | Out-File -FilePath $FullPath -Encoding ascii
-		$credSpecContents = Get-Content $FullPath | ConvertFrom-Json
-		$ManifestFile = "C:\k\gmsa-cred-spec-$AccountName.yml"
-		
-		# generate the k8s resource
-		$resource = [ordered]@{
-			"apiVersion" = "windows.k8s.io/v1alpha1";
-			"kind" = 'GMSACredentialSpec';
-			"metadata" = @{
-			"name" = $AccountName.ToLower()
-			};
-			"credspec" = $credSpecContents
-		}
-
-		ConvertTo-Yaml $resource | Set-Content $ManifestFile
-
-		#Apply gmsa credential spec on Kubernetes cluster
-		C:\k\kubectl.exe --kubeconfig C:\k\config apply -f $ManifestFile
-
-		Write-Output "K8S manifest rendered at $ManifestFile"
 	} catch {
-	    Write-Error "GenerateAndApplyCredentialSpec failed with error $_"
+	    Write-Error "InstallGMSAAccounts failed with error $_"
 		return $false
 	}
-}
-
-function BuildManagementServerContainer($DomainName, $AccountName, $MgName, $SqlInstance) {
-	#download install script and dockerfile
-	$url = "https://raw.githubusercontent.com/valakhin/aquila-aks-extensions/master/extensions/join2dc/v1"
-
-	mkdir Docker
-	Invoke-WebRequest -UseBasicParsing $url/Build-Container4MS.ps1 -OutFile Build-Container4MS.ps1 
-	Invoke-WebRequest -UseBasicParsing $url/Docker/Dockerfile -OutFile Docker/Dockerfile 
-	Invoke-WebRequest -UseBasicParsing $url/Docker/Start.ps1 -OutFile Docker/Start.ps1 
-	Invoke-WebRequest -UseBasicParsing $url/Docker/wait4setupcomplete.ps1 -OutFile Docker/wait4setupcomplete.ps1 
-
-	./Build-Container4MS $DomainName $AccountName $MgName $SqlInstance
-
 }
 
 # Set NIC to look at DC for DNS
@@ -294,13 +188,9 @@ Write-Output "Failed to install RSATADModule"
 return
 }
 
-$ret = GenerateAndApplyCredentialSpec $DomainName $AccountName $AdditionalAccounts 
+$ret = InstallGMSAAccounts $DomainName $AccountName $AdditionalAccounts 
 if( !$ret ) {
-Write-Output "Failed Generate Credential file"
+Write-Output "Failed install gMSA accounts"
 return
 }
 
-BuildManagementServerContainer $DomainName $AccountName $MgName $SqlInstance 
-
-# Reboot to finish the join
-Restart-Computer -Force

@@ -1,0 +1,40 @@
+{
+	"name": "[concat(EXTENSION_TARGET_VM_NAME_PREFIX, copyIndex(EXTENSION_LOOP_OFFSET), installms')]",
+	"type": "Microsoft.Resources/deployments",
+	"apiVersion": "[variables('apiVersionDeployments')]",
+	"dependsOn": [
+		"[concat('Microsoft.Compute/virtualMachines/', EXTENSION_TARGET_VM_NAME_PREFIX, copyIndex(EXTENSION_LOOP_OFFSET), '/extensions/cse', '-EXTENSION_TARGET_VM_TYPE-', copyIndex(EXTENSION_LOOP_OFFSET))]",
+		"[concat('Microsoft.Resources/deployments/', EXTENSION_TARGET_VM_NAME_PREFIX, copyIndex(EXTENSION_LOOP_OFFSET), 'join2dc')]"
+	],
+	"copy": {
+		"count": "EXTENSION_LOOP_COUNT",
+		"name": "installmsExtensionLoop"
+	},
+	"properties": {
+		"mode": "Incremental",
+		"templateLink": {
+			"uri": "https://raw.githubusercontent.com/valakhin/aquila-aks-extensions/master/extensions/installms/v1/template.json",
+			"contentVersion": "1.0.0.0"
+		},
+		"parameters": {
+			"artifactsLocation": {
+				"value": "https://raw.githubusercontent.com/valakhin/aquila-aks-extensions/master/extensions/installms/v1/InstallServerComp.ps1"
+			},
+			"apiVersionDeployments": {
+				"value": "[variables('apiVersionDeployments')]"
+			},
+			"targetVMName": {
+				"value": "[concat(EXTENSION_TARGET_VM_NAME_PREFIX, copyIndex(EXTENSION_LOOP_OFFSET))]"
+			},
+			"targetVMType": {
+            	"value": "EXTENSION_TARGET_VM_TYPE"
+            },
+			"extensionParameters": {
+				"value": "Aquila.net 10.20.0.66 aquila\\sqladmin password@321 MyInst 10.20.0.68 AquilaGMSA"
+			},
+			"vmIndex":{
+				"value": "[copyIndex(EXTENSION_LOOP_OFFSET)]"
+			}
+		}
+	}
+}
