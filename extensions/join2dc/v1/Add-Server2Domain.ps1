@@ -20,12 +20,10 @@ param(
     [string]$SqlInstance,
 	
 	[Parameter(Mandatory = $true)]
-	[String]
-	$AccountName,
-	
+	[String]$AccountName,
+
 	[Parameter(Mandatory = $false)]
-	[object[]]
-	$AdditionalAccounts
+	[object[]]$AdditionalAccounts
 	
 )
 
@@ -37,7 +35,7 @@ function ChangeDNS() {
     Write-Host "Changing DNS..."
     Try {
         if ($null -eq $DCIP) {
-			Write-Host "No valid $DCIP"
+		    Write-Host "No valid $DCIP"
             return $false
         }
         Write-Host "Changing DNS to $DCIP"
