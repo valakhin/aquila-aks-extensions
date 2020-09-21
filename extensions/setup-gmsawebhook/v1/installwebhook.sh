@@ -32,7 +32,7 @@ download_deploy_gmsa_webhook() {
     wget -O "deploy-gmsa-webhook.sh" "$URL"
   fi
 
-  chmod +777 deploy-gmsa-webhook.sh
+  chmod +x deploy-gmsa-webhook.sh
 
   ./deploy-gmsa-webhook.sh --file ~/.kube/gmsa-webhook-manifest.yaml
 

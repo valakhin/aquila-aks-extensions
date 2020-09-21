@@ -65,7 +65,7 @@
                     ]
                 },
                 "protectedSettings": {
-                "commandToExecute": "[concat('/bin/bash -c \"/bin/bash ./installwebhook.sh\"', ' ', '' )]"
+                "commandToExecute": "['/bin/bash -c \"/bin/bash ./installwebhook.sh\"']"
                 }
             }
         }
