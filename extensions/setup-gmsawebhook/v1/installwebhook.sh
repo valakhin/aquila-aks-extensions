@@ -31,10 +31,12 @@ download_deploy_gmsa_webhook() {
   else
     wget -O "deploy-gmsa-webhook.sh" "$URL"
   fi
-
+  printf "downloaded deployment script"
   chmod +x deploy-gmsa-webhook.sh
 
+  printf "Start deploying gmsa webhook"
   ./deploy-gmsa-webhook.sh --file ~/.kube/gmsa-webhook-manifest.yaml
+  printf "Deploying gmsa webhook finished"
 
 }
 

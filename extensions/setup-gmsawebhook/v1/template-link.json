@@ -7,7 +7,7 @@
 	],
 	"copy": {
 		"count": "EXTENSION_LOOP_COUNT",
-		"name": "gmsa-dcExtensionLoop"
+		"name": "setupgmsawebhookExtensionLoop"
 	},
 	"properties": {
 		"mode": "Incremental",
