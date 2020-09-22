@@ -41,7 +41,7 @@ download_deploy_gmsa_webhook() {
   chmod +x deploy-gmsa-webhook.sh
 
   printf "Start deploying gmsa webhook"
-  ./deploy-gmsa-webhook.sh --file ~/.kube/gmsa-webhook-manifest.yaml
+  ./deploy-gmsa-webhook.sh --file ~/.kube/gmsa-webhook-manifest.yaml >> ~/test.txt
   printf "Deploying gmsa webhook finished"
 
 }

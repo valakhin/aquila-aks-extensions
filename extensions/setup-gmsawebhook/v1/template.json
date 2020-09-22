@@ -65,7 +65,7 @@
                     ]
                 },
                 "protectedSettings": {
-                "commandToExecute": "[concat('/bin/bash -c \"/bin/bash ./installwebhook.sh ', ' >> /var/log/azure/installwebhook.log 2>&1\"')]"
+                "commandToExecute": "[/bin/bash -c "/bin/bash ./installwebhook.sh"]"
                 }
             }
         }
