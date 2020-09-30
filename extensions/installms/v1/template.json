@@ -45,7 +45,8 @@
 		 }
 	},
 	"variables": { 
-        "initScriptUrl": "https://raw.githubusercontent.com/valakhin/aquila-aks-extensions/master/extensions/installms/v1/InstallServerComp.ps1"
+        "initScriptUrl": "https://raw.githubusercontent.com/valakhin/aquila-aks-extensions/master/extensions/installms/v1/InstallServerComp.ps1",
+		"installMSArgs": "[parameters('extensionParameters')]"
 	},
 	"resources": [
 	    {
@@ -65,7 +66,7 @@
                     ]
                 },
                 "protectedSettings": {
-                "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted ./InstallServerComp.ps1', ' ', 'Aquila.net 10.20.0.66 aquila\\sqladmin password@321 MyInst 10.20.0.68 AquilaGMSA' )]"
+                "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted ./InstallServerComp.ps1', ' ', variables('installMSArgs'), ' > C:\\WindowsAzure\\Logs\\Plugins\\Microsoft.Compute.CustomScriptExtension\\cse_installms_output.log' )]"
                 }
             }
         }

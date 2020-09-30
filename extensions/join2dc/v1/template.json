@@ -45,7 +45,8 @@
 		 }
 	},
 	"variables": { 
-        "initScriptUrl": "https://raw.githubusercontent.com/valakhin/aquila-aks-extensions/master/extensions/join2dc/v1/Add-Server2Domain.ps1"
+        "initScriptUrl": "https://raw.githubusercontent.com/valakhin/aquila-aks-extensions/master/extensions/join2dc/v1/Add-Server2Domain.ps1",
+		"join2dcArgs": "[parameters('extensionParameters')]"
 	},
 	"resources": [
 	    {
@@ -65,7 +66,7 @@
                     ]
                 },
                 "protectedSettings": {
-                "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted ./Add-Server2Domain.ps1', ' ', 'Aquila.net 10.20.0.66 aquila\\sqladmin password@321 MyInst 10.20.0.68 AquilaGMSA' )]"
+                "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted ./Add-Server2Domain.ps1', ' ', variables('join2dcArgs'), ' > C:\\WindowsAzure\\Logs\\Plugins\\Microsoft.Compute.CustomScriptExtension\\cse_join2domain_output.log' )]"
                 }
             }
         }

@@ -30,7 +30,7 @@
             	"value": "EXTENSION_TARGET_VM_TYPE"
             },
 			"extensionParameters": {
-				"value": "Aquila.net 10.20.0.66 aquila\\sqladmin password@321 MyInst 10.20.0.68 AquilaGMSA"
+				"value": "EXTENSION_PARAMETERS_REPLACE"
 			},
 			"vmIndex":{
 				"value": "[copyIndex(EXTENSION_LOOP_OFFSET)]"
