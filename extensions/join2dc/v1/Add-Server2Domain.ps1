@@ -39,7 +39,7 @@ function ChangeDNS() {
             return $false
         }
         Write-Host "Changing DNS to $DCIP"
-        $Adapter = Get-NetAdapter | Where-Object {$_.Name -like "vEthernet (Ethernet*"}
+        $Adapter = Get-NetAdapter | Where-Object {$_.Name -like "vEthernet (Ethernet*" -or $_.Name -Notlike "vEthernet (nat*"}
         Set-DnsClientServerAddress -InterfaceIndex ($Adapter).ifIndex -ServerAddresses $DCIP
         return $true
     } catch {
