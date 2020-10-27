@@ -20,13 +20,13 @@ param(
     [string]$SqlInstance,
 	
 	[Parameter(Mandatory = $true)]
-	[String]
-	$AccountName,
+	[String]$AccountName,
 	
 	[Parameter(Mandatory = $false)]
-	[object[]]
-	$AdditionalAccounts
+	[object[]]$ProdVersion,
 	
+	[Parameter(Mandatory = $false)]
+	[object[]]$AdditionalAccounts
 )
 
 Set-StrictMode -Version Latest
@@ -176,7 +176,7 @@ function GenerateAndApplyCredentialSpec($Domain, $AccountName, $AdditionalAccoun
 	}
 }
 
-function BuildManagementServerContainer($DomainName, $AccountName, $MgName, $SqlInstance) {
+function BuildManagementServerContainer($DomainName, $AccountName, $MgName, $SqlInstance, $ProdVersion) {
 	#download install script and dockerfile
 	$url = "https://raw.githubusercontent.com/valakhin/aquila-aks-extensions/master/extensions/installms/v1"
 
@@ -186,7 +186,7 @@ function BuildManagementServerContainer($DomainName, $AccountName, $MgName, $Sql
 	Invoke-WebRequest -UseBasicParsing $url/Docker/Start.ps1 -OutFile Docker/Start.ps1 
 	Invoke-WebRequest -UseBasicParsing $url/Docker/wait4setupcomplete.ps1 -OutFile Docker/wait4setupcomplete.ps1 
 
-	./Build-Container4MS $DomainName $AccountName $MgName $SqlInstance
+	./Build-Container4MS $DomainName $AccountName $MgName $SqlInstance $ProdVersion
 
 }
 
@@ -201,7 +201,7 @@ return
 }
 
 
-BuildManagementServerContainer $DomainName $AccountName $MgName $SqlInstance 
+BuildManagementServerContainer $DomainName $AccountName $MgName $SqlInstance $ProdVersion
 
 # Reboot to finish the join
 Restart-Computer -Force
