@@ -26,6 +26,7 @@ try {
 	Write-Output "Container registry login Success"
 } catch {
 	Write-Output "Container registry login Failed"
+	exit 1
 }
 
 if (-not $prodVersion) {
@@ -50,6 +51,6 @@ docker build --security-opt "credentialspec=file://$CredFileName" --build-arg co
 			 --build-arg dwname=$dwname --build-arg mgName=$mgName -t $ImageName  Docker/
 
 # tag the build image and push to container registry
-docker tag scomservermain:latest aquila.azurecr.io/$ImageName
+docker tag $ImageName aquila.azurecr.io/$ImageName
 docker push aquila.azurecr.io/$ImageName
 
