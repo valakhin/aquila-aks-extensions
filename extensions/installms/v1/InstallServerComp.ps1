@@ -23,7 +23,7 @@ param(
 	[String]$AccountName,
 	
 	[Parameter(Mandatory = $false)]
-	[object[]]$ProdVersion,
+	[String]$ProdVersion,
 	
 	[Parameter(Mandatory = $false)]
 	[object[]]$AdditionalAccounts
