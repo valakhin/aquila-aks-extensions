@@ -69,7 +69,7 @@ function InstallgMSACRD() {
 		}
 		ConvertTo-Yaml $resource | Set-Content $CrdManifestFile
 		#Apply the CustomResourceDefinition for gMSA
-		C:\k\kubectl.exe --kubeconfig C:\k\config apply -f $CrdManifestFile
+		#C:\k\kubectl.exe --kubeconfig C:\k\config apply -f $CrdManifestFile
 	} catch {
 		Write-Error "The Failed to generate and aplly CRD "
 		return $false
@@ -167,7 +167,7 @@ function GenerateAndApplyCredentialSpec($Domain, $AccountName, $AdditionalAccoun
 		ConvertTo-Yaml $resource | Set-Content $ManifestFile
 
 		#Apply gmsa credential spec on Kubernetes cluster
-		C:\k\kubectl.exe --kubeconfig C:\k\config apply -f $ManifestFile
+		#C:\k\kubectl.exe --kubeconfig C:\k\config apply -f $ManifestFile
 
 		Write-Output "K8S manifest rendered at $ManifestFile"
 	} catch {
