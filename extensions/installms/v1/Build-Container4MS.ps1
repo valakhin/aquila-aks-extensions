@@ -26,7 +26,6 @@ try {
 	Write-Output "Container registry login Success"
 } catch {
 	Write-Output "Container registry login Failed"
-	exit 1
 }
 
 if (-not $prodVersion) {
